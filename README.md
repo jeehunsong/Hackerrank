@@ -1,2 +1,2 @@
 # Hackerrank
-Problem solving for www.hackerrank.com
+Problem solving of www.hackerrank.com
