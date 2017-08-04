@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <fstream>
 
 using namespace std;
 
@@ -10,41 +11,12 @@ using namespace std;
 vector<int> freq(26);
 
 void solve() {
-	bool verdict = false;
+	int n = freq.size();
 
-	for (int i = 1 ; i < 26 ; ++i)
-	{
-		if (freq[i] == 0) {
-			verdict = true;
-			break;
-		}
-		if (freq[i] == freq[0] - 1 && (i == 25 || freq[i + 1] == 0)) {
-			verdict = true;
-			break;
-		}
-		if (freq[i] != freq[0])
-			break;
-	}
-
-	if (verdict == false) {
-		int startPos;
-		for (int i = 25; i >= 0 ; --i)
-		{
-			if (freq[i] > 0) {
-				startPos = i;
-#ifdef DEBUG
-				cout << "StartPos " << i << endl;
-#endif
-				break;
-			}
-		}
-		if (freq[0] == freq[startPos] 
-			|| (freq[0] - 1 == freq[1] && freq[1] == freq[startPos])) {
-			verdict = true;
-		}
-	}
-
-	if (verdict == true) {
+	if ((freq[0] == freq.back()) || 
+		(n <= 1) ||
+		(freq[0] == freq[1] + 1 && freq[1] == freq.back()) ||
+		(freq[0] == freq[n - 2] && (freq[0] == freq.back() + 1 || freq.back() == 1))){
 		cout << "YES" << endl;
 	}
 	else {
@@ -54,17 +26,44 @@ void solve() {
 
 int main()
 {
+#if 0
 	string input;
-
+	
 	cin >> input;
-	for (int i = 0; i < input.size() ; ++i)
+	for (int i = 0; i < input.size(); i++)
 	{
-		char& c = input[i];
-		//if (c >= 'a' && c <= 'z')
-			++freq[c - 'a'];
+		++freq[input[i] - 'a'];
 	}
+#endif
+#if 0
+	FILE* fp = fopen("input.txt", "r");
+	char ch;
+	while (EOF != (ch = fgetc(fp))) {
+		putchar(ch);
+		if (ch >= 'a' && ch <= 'z') {
+			++freq[ch - 'a'];
+		}
+	}
+	cout << endl;
 
-	sort(freq.begin(), freq.end(), [](int a, int b){return a > b;});
+	fclose(fp);
+#endif
+#if 1
+	char c = getc(stdin);
+	while (c >= 'a' && c <= 'z') {
+		++freq[c - 'a'];
+		c = getc(stdin);
+	}
+#endif
+
+#ifdef DEBUG
+	for (auto i : freq)	cout << i << " "; cout << endl;
+#endif
+
+	sort(freq.begin(), freq.end(), [](int a, int b) {return a > b; });
+	while (freq.back() == 0) {
+		freq.pop_back();
+	}
 
 #ifdef DEBUG
 	for (auto i : freq)	cout << i << " "; cout << endl;
